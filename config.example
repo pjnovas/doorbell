@@ -1,0 +1,16 @@
+/*
+ * Configuration File
+ * Rename me into config.h and set up
+ */
+
+#define WIFI_HOSTNAME "DoorBell"
+#define WIFI_SSID "********"
+#define WIFI_PASSWORD "********"
+
+#define KEY "url-token-key-for-IFTTT"
+#define EVENT_NAME "EVENT_NAME"
+
+// Uses builtin led to debug - disable by commenting this line (less power)
+#define LED_BUILTIN 1
+// Use 1 for builtin led of ESP 01 v1
+// Use 2 for builtin led of ESP 01 v2
