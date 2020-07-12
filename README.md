@@ -22,7 +22,8 @@ When you are ready debugging comment `#define` line for `LED_BUILTIN` at `config
 
 ## Power source
 
-My plan is to use an 18650 with a 3v3 zener diode but I haven't any so I'll update it sooner, so far I pluged in the 18650 cell directly (4.2v) so fingercross to not get a burned ESP soon.
+My plan is to use an 18650 with a 3v3 zener diode but I don't have any diode (I'll update it when I get some).  
+I have plugged in a 18650 cell directly (4.2v) so _fingers cross_ to not get a burned ESP soon.
 
 ## How it works
 
