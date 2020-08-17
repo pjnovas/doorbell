@@ -1,5 +1,11 @@
 # Doorbell IoT
 
+New script sending MQTT (WIP)
+
+----
+
+For IFTTT check branch `ifttt`
+
 This script triggers an IFTTT webhook on start and then go to deep sleep until a reset fires it again (by pulling RST pin to GND)
 
 - Set up `config.example` into `config.h` with your settings.

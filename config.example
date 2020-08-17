@@ -3,12 +3,16 @@
  * Rename me into config.h and set up
  */
 
-#define WIFI_HOSTNAME "DoorBell"
-#define WIFI_SSID "********"
-#define WIFI_PASSWORD "********"
+#define WIFI_HOSTNAME "doorbell"
+#define WIFI_SSID "xxxx"
+#define WIFI_PASSWORD "yyyyy"
 
-#define KEY "url-token-key-for-IFTTT"
-#define EVENT_NAME "EVENT_NAME"
+#define MQTT_HOST "localhost"
+#define MQTT_PORT 1883
+#define MQTT_USER "user"
+#define MQTT_PASS "pwd"
+
+#define MQTT_TOPIC "door/bell"
 
 // Uses builtin led to debug - disable by commenting this line (less power)
 #define LED_BUILTIN 1

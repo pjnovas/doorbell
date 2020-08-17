@@ -1,106 +1,57 @@
 #include "config.h"
 
 #include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
-#include <WiFiClient.h>
+#include <PubSubClient.h>
 
-String eventName = EVENT_NAME;
-String key = KEY;
+const char *ssid = WIFI_SSID;
+const char *password = WIFI_PASSWORD;
+const char *clientId = WIFI_HOSTNAME;
 
-void connectToWifi()
+const char *mqtt_server = MQTT_HOST;
+const unsigned int mqtt_port = MQTT_PORT;
+
+const char *mqtt_user = MQTT_USER;
+const char *mqtt_pass = MQTT_PASS;
+const char *mqtt_topic = MQTT_TOPIC;
+
+WiFiClient espClient;
+PubSubClient client(espClient);
+
+void setup_wifi()
 {
-  int tries = 20;
-
   WiFi.mode(WIFI_STA);
   WiFi.hostname(WIFI_HOSTNAME);
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
-    blink(1, 200, 200);
-    tries--;
-
-    if (tries < 0 || WiFi.status() == WL_CONNECT_FAILED)
-    {
-      blink(2, 200, 1000);
-      ESP.restart();
-      return;
-    }
   }
-
-  blinkOK();
 }
 
-void sendNotification()
+void reconnect()
 {
-#ifdef LED_BUILTIN
-  digitalWrite(LED_BUILTIN, LOW);
-#endif
-
-  WiFiClient client;
-  HTTPClient http;
-
-  if (http.begin(client, "http://maker.ifttt.com/trigger/" + eventName + "/with/key/" + key))
+  if (client.connect(clientId, mqtt_user, mqtt_pass))
   {
-    int httpCode = http.GET();
-    if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY)
-    {
-      blinkOK();
-      http.end();
-      return;
-    }
+    client.publish(mqtt_topic, "RING");
+    delay(5000);
+    ESP.deepSleep(0);
   }
 
-  http.end();
-  blinkFail();
+  delay(5000);
 }
 
 void setup()
 {
-#ifdef LED_BUILTIN
-  pinMode(LED_BUILTIN, OUTPUT);
-#endif
-
-  delay(500);
-
-  connectToWifi();
-  sendNotification();
-
-  // Go sleep
-  ESP.deepSleep(0);
+  setup_wifi();
+  client.setServer(mqtt_server, mqtt_port);
 }
 
-void blink(int times, int offTime, int onTime)
+void loop()
 {
-#ifdef LED_BUILTIN
-  for (int i = 0; i <= times; i++)
+  if (!client.connected())
   {
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(onTime);
-
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(offTime);
+    reconnect();
   }
-#endif
+  client.loop();
 }
-
-void blinkOK() // 3 quick blinks
-{
-  blink(3, 300, 300);
-}
-
-void blinkFail()
-{
-  // will block on led flashes ONLY IF DEBUG IS ACTIVE
-  // otherwise it will go on to deep sleep till next reset
-
-#ifdef LED_BUILTIN
-  while (true)
-  {
-    blink(1, 1000, 1000);
-  }
-#endif
-}
-
-void loop() {} // NOT USED
